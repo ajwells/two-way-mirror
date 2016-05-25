@@ -1,6 +1,6 @@
 
 import java.util.Calendar;
-//import processing.io.*;
+import processing.io.*;
 
 //weather variables
 JSONObject weatherData;
@@ -37,6 +37,8 @@ int clockPin = 6;
 int otherPin = 13;
 
 //other
+int state = 0;
+int onOff = 0;
 int keyNum = 87;
 int minute = 0;
 int resetWeather = 10; //minutes to recapture weather data
@@ -46,8 +48,8 @@ boolean reset = false;
 
 void setup() {
   
-  //size(800, 480);
-  fullScreen();
+  size(800, 480);
+  //fullScreen();
   background(0);
   
   minute = minute();
@@ -55,10 +57,28 @@ void setup() {
   getWeatherData();
   
   //pins
-  //GPIO.pinmode(onOffPin, GPIO.INPUT);
+  GPIO.pinMode(onOffPin, GPIO.INPUT);
+  GPIO.pinMode(weatherPin, GPIO.INPUT);
+  GPIO.pinMode(clockPin, GPIO.INPUT);
+  GPIO.pinMode(otherPin, GPIO.INPUT);
 }
 
 void draw() {
+  //Check Buttons
+  if (GPIO.digitalRead(onOffPin) == GPIO.HIGH) {
+    onOff = 1;
+  } else {
+    onOff = 0;
+  }
+  if (GPIO.digitalRead(clockPin) == GPIO.HIGH) {
+    state = 0;
+  }
+  if (GPIO.digitalRead(weatherPin) == GPIO.HIGH) {
+    state = 1;
+  }
+  if (GPIO.digitalRead(otherPin) == GPIO.HIGH) {
+    state = 2;
+  }
   //get new weather data if enough time has passed
   if (((minute + resetWeather)%60) == minute()) {
     if (reset == false) {
@@ -71,10 +91,11 @@ void draw() {
     }
   }
   //change state
-  if (keyNum == 67) {            //'c' pressed
+  if (state == 0 && onOff == 1) { 
     drawClock();
-  } else if (keyNum == 87) {     //'w' pressed
+  } else if (state == 1 && onOff == 1) {  
     drawWeather();
+  } else if (state == 2 && onOff == 1) { 
   }
 }   
 
