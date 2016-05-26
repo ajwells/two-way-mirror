@@ -61,24 +61,17 @@ void setup() {
   GPIO.pinMode(weatherPin, GPIO.INPUT);
   GPIO.pinMode(clockPin, GPIO.INPUT);
   GPIO.pinMode(otherPin, GPIO.INPUT);
+  GPIO.attachInterrupt(onOffPin, this, "pinEvent", GPIO.CHANGE);
+  GPIO.attachInterrupt(weatherPin, this, "pinEvent", GPIO.RISING);
+  GPIO.attachInterrupt(clockPin, this, "pinEvent", GPIO.RISING);
+  GPIO.attachInterrupt(otherPin, this, "pinEvent", GPIO.RISING);
+  
+  if (GPIO.digitalRead(onOffPin) == GPIO.HIGH) {
+    onOff = 1;
+  }
 }
 
 void draw() {
-  //Check Buttons
-  if (GPIO.digitalRead(onOffPin) == GPIO.HIGH) {
-    onOff = 1;
-  } else {
-    onOff = 0;
-  }
-  if (GPIO.digitalRead(clockPin) == GPIO.HIGH) {
-    state = 0;
-  }
-  if (GPIO.digitalRead(weatherPin) == GPIO.HIGH) {
-    state = 1;
-  }
-  if (GPIO.digitalRead(otherPin) == GPIO.HIGH) {
-    state = 2;
-  }
   //get new weather data if enough time has passed
   if (((minute + resetWeather)%60) == minute()) {
     if (reset == false) {
@@ -100,6 +93,24 @@ void draw() {
     background(0);
   }
 }   
+
+void pinEvent(int pin) {
+  //noInterrupts();
+  if (pin == onOffPin) {
+    if (GPIO.digitalRead(pin) == GPIO.HIGH) {
+      onOff = 1;
+    } else {
+      onOff = 0;
+    }
+  } else if (pin == clockPin) {
+    state = 0;
+  } else if (pin == weatherPin) {
+    state = 1;
+  } else if (pin == otherPin) {
+    state = 2;
+  }
+  //interrupts();
+}
 
 void keyPressed() {
   if (key == 'c') {
