@@ -45,11 +45,11 @@ int resetWeather = 10; //minutes to recapture weather data
 boolean reset = false;
 
 
-
 void setup() {
   
-  size(800, 480);
-  //fullScreen();
+  //size(800, 480);
+  noCursor();
+  fullScreen();
   background(0);
   
   minute = minute();
@@ -96,6 +96,8 @@ void draw() {
   } else if (state == 1 && onOff == 1) {  
     drawWeather();
   } else if (state == 2 && onOff == 1) { 
+  } else {
+    background(0);
   }
 }   
 
@@ -359,6 +361,7 @@ void setupClock() {
 }
 
 void drawClock() {
+  background(0);
   drawClockFace();  //draw analog clock
   drawClockInfo();  //draw time and date
 }  
@@ -394,7 +397,6 @@ void drawClockInfo() {
 }  
 
 void drawClockFace() {
-  background(0);
   // Draw the clock background
   fill(80);
   stroke(255);
