@@ -152,7 +152,7 @@ void drawWeatherPicture() {
   } else if (curID <= 531 && curID >= 500) {
     drawHeavyRain(); 
   } else if (curID <= 622 && curID >= 600) {
-    //snow 
+    drawSnow();
   } else if (curID == 804) {
     drawHeavyClouds();
   } else if (curID == 803) {
